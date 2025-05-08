@@ -51,12 +51,21 @@ async function startBot() {
           console.log('📤 Reminder pagi dikirim');
         });
 
+        scheduleJob('30 8 * * *', () => {
+          sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA WOI!' });
+          console.log('📤 Reminder pagi dikirim');
+        });
+
         // Kirim jam 17:00
         scheduleJob('0 17 * * *', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' });
           console.log('📤 Reminder sore dikirim');
         });
-       
+
+        scheduleJob('30 18 * * *', () => {
+          sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' });
+          console.log('📤 Reminder sore dikirim');
+        });
 
         console.log('⏰ Reminder aktif setiap hari pukul 08:00 & 17:00');
       } catch (err) {
