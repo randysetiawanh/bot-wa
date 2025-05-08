@@ -45,7 +45,7 @@ async function startBot() {
         console.log('🎯 Kirim pesan ke grup:', group.subject);
 
         // Kirim jam 08:00
-        scheduleJob('30 8 * * *', () => {
+        scheduleJob('0 8 * * *', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA!' });
           console.log('📤 Reminder pagi dikirim');
         });
