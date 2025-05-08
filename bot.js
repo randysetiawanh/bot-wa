@@ -1,6 +1,7 @@
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
 const qrcode = require('qrcode-terminal');
 const { scheduleJob } = require('node-schedule');
+global.crypto = require('crypto');
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState('./auth');
@@ -55,11 +56,7 @@ async function startBot() {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' });
           console.log('📤 Reminder sore dikirim');
         });
-
-        scheduleJob('36 20 * * *', () => {
-          sock.sendMessage(groupJid, { text: '🔔 Ini pesan uji coba lagi bang' });
-          console.log('📤 Pesan uji coba terkirim pada 20:32');
-        });
+       
 
         console.log('⏰ Reminder aktif setiap hari pukul 08:00 & 17:00');
       } catch (err) {
