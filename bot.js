@@ -46,24 +46,24 @@ async function startBot() {
         console.log('🎯 Kirim pesan ke grup:', group.subject);
 
         // Kirim jam 08:00
-        scheduleJob('0 8 * * *', () => {
+        scheduleJob('0 8 * * 1-5', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA!' });
           console.log('📤 Reminder pagi dikirim');
         });
 
-        scheduleJob('30 8 * * *', () => {
+        scheduleJob('30 8 * * 1-5', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA WOI!' });
           console.log('📤 Reminder pagi dikirim');
         });
 
         // Kirim jam 17:00
-        scheduleJob('0 17 * * *', () => {
+        scheduleJob('0 17 * * 1-5', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' });
           console.log('📤 Reminder sore dikirim');
         });
 
-        scheduleJob('30 18 * * *', () => {
-          sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' });
+        scheduleJob('30 18 * * 1-5', () => {
+          sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!!!' });
           console.log('📤 Reminder sore dikirim');
         });
 
