@@ -20,5 +20,6 @@ jobs:
             cd /home/rancores_id/bot-wa
             git reset --hard
             git pull origin main
+            npm install
             pm2 restart bot-wa || pm2 start bot.js --name bot-wa
 
