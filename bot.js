@@ -1,7 +1,17 @@
 const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
 const qrcode = require('qrcode-terminal');
 const { scheduleJob } = require('node-schedule');
+const logger = require('./logger');
+
 global.crypto = require('crypto');
+
+process.on('uncaughtException', (err) => {
+  logger.error(`❌ Uncaught Exception: ${err.stack}`);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error(`❌ Unhandled Rejection: ${reason}`);
+});
 
 async function startBot() {
   const { state, saveCreds } = await useMultiFileAuthState('./auth');
@@ -38,36 +48,34 @@ async function startBot() {
         const group = Object.values(groups).find((g) => g.subject === groupNameTarget);
 
         if (!group) {
-          console.log(`❌ Grup "${groupNameTarget}" tidak ditemukan. Pastikan kamu adalah anggotanya.`);
+          const msg = `❌ Grup "${groupNameTarget}" tidak ditemukan. Pastikan kamu adalah anggotanya.`;
+          console.log(msg);
+          logger.warn(msg);
           return;
         }
 
         const groupJid = group.id;
         console.log('🎯 Kirim pesan ke grup:', group.subject);
 
-        scheduleJob('0 8 * * 1-5', () => {
+        scheduleJob('0 8 * * *', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA!' });
-          console.log('📤 Reminder pagi dikirim');
         });
 
-        scheduleJob('30 8 * * 1-5', () => {
+        scheduleJob('30 8 * * *', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA WOI!' });
-          console.log('📤 Reminder pagi dikirim');
         });
 
-        scheduleJob('0 17 * * 1-5', () => {
+        scheduleJob('0 17 * * *', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' });
         });
 
-        scheduleJob('30 18 * * 1-5', () => {
+        scheduleJob('30 18 * * *', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!!!' });
         });
 
-        scheduleJob('40 21 * * 3', () => {
+        scheduleJob('57 21 * * *', () => {
           sock.sendMessage(groupJid, { text: 'INI TEST!!!' });
         });
-
-        console.log('⏰ Reminder aktif setiap hari pukul 08:00 & 17:00');
       } catch (err) {
         console.error('❌ Gagal ambil grup:', err);
       }
