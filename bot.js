@@ -63,7 +63,7 @@ async function startBot() {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!!!' });
         });
 
-        scheduleJob('55 18 * * 1-5', () => {
+        scheduleJob('58 18 * * 1-5', () => {
           sock.sendMessage(groupJid, { text: 'INI TEST!!!' });
         });
 
