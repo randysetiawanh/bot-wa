@@ -70,7 +70,7 @@ function setupReminders(sock, groupJid) {
     { time: '30 8 * * 1-5', message: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA WOI!' },
     { time: '0 17 * * 1-5', message: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' },
     { time: '30 18 * * 1-5', message: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!!!' },
-    { time: '20 22 * * 3', message: 'INI TEST BANG!' },
+    // { time: '25 22 * * 3', message: 'INI TEST BANG!' },
   ];
 
   scheduleList.forEach(({ time, message }) => {
