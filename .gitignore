@@ -6,5 +6,3 @@ google-cloud-sdk
 auth2
 
 logs/*
-!logs/bot-combined.log
-!logs/bot-error.log
