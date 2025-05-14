@@ -55,32 +55,31 @@ async function startBot() {
         }
 
         const groupJid = group.id;
-        console.log('🎯 Kirim pesan ke grup:', group.subject);
 
-        scheduleJob('0 8 * * *', () => {
-          sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA!' });
-        });
-
-        scheduleJob('30 8 * * *', () => {
-          sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA WOI!' });
-        });
-
-        scheduleJob('0 17 * * *', () => {
-          sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' });
-        });
-
-        scheduleJob('30 18 * * *', () => {
-          sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!!!' });
-        });
-
-        scheduleJob('57 21 * * *', () => {
-          sock.sendMessage(groupJid, { text: 'INI TEST!!!' });
-        });
+        setupReminders(sock, groupJid);
       } catch (err) {
         console.error('❌ Gagal ambil grup:', err);
       }
     }
   });
 }
+
+function setupReminders(sock, groupJid) {
+  const scheduleList = [
+    { time: '0 8 * * 1-5', message: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA!' },
+    { time: '30 8 * * 1-5', message: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA WOI!' },
+    { time: '0 17 * * 1-5', message: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' },
+    { time: '30 18 * * 1-5', message: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!!!' },
+    { time: '15 22 * * 3', message: 'INI TEST BANG!' },
+  ];
+
+  scheduleList.forEach(({ time, message }) => {
+    scheduleJob(time, () => {
+      sock.sendMessage(groupJid, { text: message });
+      logger.info(`📤 Jadwal terkirim: "${message}" pada ${time}`);
+    });
+  });
+}
+
 
 startBot();
