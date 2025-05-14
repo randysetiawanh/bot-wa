@@ -45,7 +45,6 @@ async function startBot() {
         const groupJid = group.id;
         console.log('🎯 Kirim pesan ke grup:', group.subject);
 
-        // Kirim jam 08:00
         scheduleJob('0 8 * * 1-5', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN MASUK JANGAN LUPA!' });
           console.log('📤 Reminder pagi dikirim');
@@ -56,15 +55,16 @@ async function startBot() {
           console.log('📤 Reminder pagi dikirim');
         });
 
-        // Kirim jam 17:00
         scheduleJob('0 17 * * 1-5', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!' });
-          console.log('📤 Reminder sore dikirim');
         });
 
         scheduleJob('30 18 * * 1-5', () => {
           sock.sendMessage(groupJid, { text: '🔔🔔🔔 ABSEN PULANG JUGA JANGAN LUPA!!!' });
-          console.log('📤 Reminder sore dikirim');
+        });
+
+        scheduleJob('55 18 * * 1-5', () => {
+          sock.sendMessage(groupJid, { text: 'INI TEST!!!' });
         });
 
         console.log('⏰ Reminder aktif setiap hari pukul 08:00 & 17:00');
