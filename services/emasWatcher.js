@@ -39,7 +39,11 @@ async function checkHargaEmas() {
     }
   }
 
-  if (hasChanged) {
+  const now = new Date();
+  const { hour, minute } = config.forceSendTime;
+  const isScheduledTime = now.getHours() === hour && now.getMinutes() === minute;
+
+  if (hasChanged || isNoon) {
     const message = Object.entries(newData)
       .map(([source, { jual, buyback }]) => {
         return `🧈 *${source.toUpperCase()}* 🧈 \n💰 Jual: Rp ${jual} \n💰 Buyback: Rp ${buyback}`;
@@ -47,8 +51,13 @@ async function checkHargaEmas() {
       .join('\n\n');
 
     await waSendMessage(message, 'Update Harga Emas');
-    fs.writeFileSync(CACHE_FILE, JSON.stringify(newData, null, 2));
-    logger.info('Harga emas berubah, pesan dikirim');
+
+    if (hasChanged) {
+      fs.writeFileSync(CACHE_FILE, JSON.stringify(newData, null, 2));
+      logger.info('Harga emas berubah, pesan dikirim');
+    } else {
+      logger.info('Harga tetap, tapi pesan dikirim karena jam 12 siang');
+    }
   } else {
     logger.info('Harga emas tidak berubah');
   }
