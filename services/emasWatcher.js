@@ -42,7 +42,7 @@ async function checkHargaEmas() {
   if (hasChanged) {
     const message = Object.entries(newData)
       .map(([source, { jual, buyback }]) => {
-        return `🧈 *${source.toUpperCase()}* 🧈\n💰 Jual: ${jual}\n💰 Buyback: ${buyback}`;
+        return `🧈 *${source.toUpperCase()}* 🧈 \n💰 Jual: Rp ${jual} \n💰 Buyback: Rp ${buyback}`;
       })
       .join('\n\n');
 
