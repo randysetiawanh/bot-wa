@@ -1,7 +1,7 @@
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('baileys');
 const qrcode = require('qrcode-terminal');
 const { scheduleJob } = require('node-schedule');
-const logger = require('./logger');
+const logger = require('./utils/logger');
 
 global.crypto = require('crypto');
 

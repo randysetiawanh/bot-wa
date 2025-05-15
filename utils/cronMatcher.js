@@ -6,7 +6,6 @@ function cronMatch(cronTime, now = new Date()) {
   const currentHour = now.getHours();
   const currentDay = now.getDay(); // Minggu = 0, Senin = 1, dst
 
-  console.log("ini crontime", cronTime);
   const validDay = days === '*' || days.split(',').some(d => {
     if (d.includes('-')) {
       const [start, end] = d.split('-').map(Number);

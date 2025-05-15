@@ -44,5 +44,5 @@ module.exports = function startAbsenScheduler() {
   checkScheduleAndSend();
 
   // Lanjut jalan setiap 1 menit
-  setInterval(checkScheduleAndSend, config.pollingInterval);
+  setInterval(checkScheduleAndSend, config.absenInterval);
 };

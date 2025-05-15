@@ -1,28 +1,40 @@
-const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('@whiskeysockets/baileys');
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason } = require('baileys');
 const qrcode = require('qrcode-terminal');
 const logger = require('../utils/logger');
 
-let sock;
-
 async function connectWhatsApp() {
   const { state, saveCreds } = await useMultiFileAuthState('./auth');
-  sock = makeWASocket({ auth: state, browser: ['Ubuntu', 'Chrome', '22.04'] });
+
+  const sock = makeWASocket({
+    auth: state,
+    browser: ['Ubuntu', 'Chrome', '22.04.4'],
+    printQRInTerminal: true,
+  });
 
   sock.ev.on('creds.update', saveCreds);
 
   return new Promise((resolve, reject) => {
     sock.ev.on('connection.update', async ({ connection, qr, lastDisconnect }) => {
-      if (qr) qrcode.generate(qr, { small: true });
+      if (qr) {
+        qrcode.generate(qr, { small: true });
+      }
 
       if (connection === 'open') {
         logger.info('✅ WhatsApp connected');
+
+        // 🔁 Delay agar internal reinit selesai
+        await new Promise(r => setTimeout(r, 3000));
         resolve(sock);
       }
 
       if (connection === 'close') {
-        const shouldReconnect = lastDisconnect?.error?.output?.statusCode !== DisconnectReason.loggedOut;
-        logger.warn(`❌ WhatsApp disconnected. Reconnect? ${shouldReconnect}`);
-        reject(new Error('WhatsApp disconnected'));
+        const reason = lastDisconnect?.error?.output?.statusCode;
+        const shouldReconnect = reason !== DisconnectReason.loggedOut;
+        logger.warn('❌ Connection closed. Reconnect?', shouldReconnect);
+
+        if (!shouldReconnect) {
+          reject(new Error('Connection closed permanently.'));
+        }
       }
     });
   });

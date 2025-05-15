@@ -7,3 +7,4 @@ auth2
 
 logs/*
 logs/bot-combined.log
+cache/goldPrice.json
