@@ -40,10 +40,10 @@ async function checkHargaEmas() {
   }
 
   const now = new Date();
-  const { hour, minute } = config.forceSendTime;
+  const { hour, minute } = config.goldForceSendHour;
   const isScheduledTime = now.getHours() === hour && now.getMinutes() === minute;
 
-  if (hasChanged || isNoon) {
+  if (hasChanged || isScheduledTime) {
     const message = Object.entries(newData)
       .map(([source, { jual, buyback }]) => {
         return `🧈 *${source.toUpperCase()}* 🧈 \n💰 Jual: Rp ${jual} \n💰 Buyback: Rp ${buyback}`;
