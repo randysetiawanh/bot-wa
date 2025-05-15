@@ -6,8 +6,8 @@ module.exports = async function scrapeHargaEmas() {
   const { data } = await axios.get(url);
   const $ = cheerio.load(data);
 
-  const jual = $('.price-current').eq(2).text().trim();
-  const buyback = $('.price-current').eq(1).text().trim();
+  const jual = $('.price-current').eq(1).text().trim();
+  const buyback = $('.price-current').eq(2).text().trim();
 
   return {
     source: 'hargaemas',
