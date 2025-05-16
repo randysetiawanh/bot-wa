@@ -44,9 +44,31 @@ async function checkHargaEmas() {
   const isScheduledTime = now.getHours() === hour && now.getMinutes() === minute;
 
   if (hasChanged || isScheduledTime) {
-    const message = Object.entries(newData)
+    let message = '';
+    if(isScheduledTime){
+      message += '~~~ UPDATE HARGA SIANG ~~~\n';
+    }
+    message += Object.entries(newData)
       .map(([source, { jual, buyback }]) => {
-        return `🧈 *${source.toUpperCase()}* 🧈 \n💰 Jual: Rp ${jual} \n💰 Buyback: Rp ${buyback}`;
+        const cached = cachedData[source] || {};
+
+        const jualNow = parseInt(jual.replace(/\./g, ''), 10);
+        const buybackNow = parseInt(buyback.replace(/\./g, ''), 10);
+
+        const cachedJual = cached.jual ? parseInt(cached.jual.replace(/\./g, ''), 10) : null;
+        const cachedBuyback = cached.buyback ? parseInt(cached.buyback.replace(/\./g, ''), 10) : null;
+
+        const selisihJual = cachedJual !== null ? jualNow - cachedJual : null;
+        const selisihBuyback = cachedBuyback !== null ? buybackNow - cachedBuyback : null;
+
+        const formatSelisih = (angka) => {
+          if (angka === null) return '(data awal)';
+          if (angka === 0) return 'Rp. 0';
+          const prefix = angka > 0 ? '+ Rp ' : '- Rp ';
+          return prefix + Math.abs(angka).toLocaleString('id-ID');
+        };
+
+        return `🧈 *${source.toUpperCase()}* 🧈\n💰 Jual: Rp ${jual} | Selisih harga sebelumnya : ${formatSelisih(selisihJual)}\n💰 Buyback: Rp ${buyback} | Selisih harga sebelumnya : ${formatSelisih(selisihBuyback)}`;
       })
       .join('\n\n');
 
@@ -59,7 +81,9 @@ async function checkHargaEmas() {
       logger.info('Harga tetap, tapi pesan dikirim karena jam 12 siang');
     }
   } else {
-    logger.info('Harga emas tidak berubah');
+    // Supaya tidak terlalu nyampah di logger
+    if(now.getMinutes() === 0)
+      logger.info('Harga emas tidak berubah');
   }
 }
 
