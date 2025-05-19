@@ -4,12 +4,12 @@ const logger = require('../utils/logger');
 const config = require('../config');
 const hargaemas = require('./scrapers/hargaemas');
 const anekalogam = require('./scrapers/anekalogam');
-const lakuemas = require('./scrapers/lakuemas');
+const hargaemasnet = require('./scrapers/hargaemasnet');
 const waSendMessage = require('./whatsappSendMessage');
 
 const CACHE_FILE = path.join(__dirname, '../cache/goldPrice.json');
 
-const scrapers = [hargaemas, anekalogam];
+const scrapers = [hargaemas, anekalogam, hargaemasnet];
 
 async function checkHargaEmas() {
   let cachedData = {};
