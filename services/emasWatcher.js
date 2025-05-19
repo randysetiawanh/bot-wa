@@ -63,7 +63,7 @@ async function checkHargaEmas() {
 
         const formatSelisih = (angka) => {
           if (!angka) return null;
-          const prefix = angka > 0 ? '➕ Rp ' : '➖ Rp ';
+          const prefix = angka > 0 ? '+ Rp ' : '- Rp ';
           return prefix + Math.abs(angka).toLocaleString('id-ID');
         };
         
