@@ -7,7 +7,11 @@ async function connectWhatsApp() {
 
   const sock = makeWASocket({
     auth: state,
-    browser: ['Ubuntu', 'Chrome', '22.04.4'],
+    browser: [
+      process.env.DEVICE_TYPE,
+      process.env.DEVICE_BROWSER,
+      process.env.DEVICE_VERSION
+    ],
     printQRInTerminal: true,
   });
 
