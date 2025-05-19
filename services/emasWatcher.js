@@ -68,7 +68,7 @@ async function checkHargaEmas() {
           return prefix + Math.abs(angka).toLocaleString('id-ID');
         };
 
-        return `🧈 *${source.toUpperCase()}* 🧈\n💰 Jual: Rp ${jual} | Selisih harga sebelumnya : ${formatSelisih(selisihJual)}\n💰 Buyback: Rp ${buyback} | Selisih harga sebelumnya : ${formatSelisih(selisihBuyback)}`;
+        return `🧈 *${source.toUpperCase()}* 🧈\n💰 Jual: Rp ${jual} | Selisih harga : ${formatSelisih(selisihJual)}\n💰 Buyback: Rp ${buyback} | Selisih harga : ${formatSelisih(selisihBuyback)}`;
       })
       .join('\n\n');
 
