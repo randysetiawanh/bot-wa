@@ -62,13 +62,17 @@ async function checkHargaEmas() {
         const selisihBuyback = cachedBuyback !== null ? buybackNow - cachedBuyback : null;
 
         const formatSelisih = (angka) => {
-          if (angka === null) return '(data awal)';
-          if (angka === 0) return 'Rp. 0';
-          const prefix = angka > 0 ? '+ Rp ' : '- Rp ';
+          if (!angka) return null;
+          const prefix = angka > 0 ? '➕ Rp ' : '➖ Rp ';
           return prefix + Math.abs(angka).toLocaleString('id-ID');
         };
-
-        return `🧈 *${source.toUpperCase()}* 🧈\n💰 Jual: Rp ${jual} | Selisih harga : ${formatSelisih(selisihJual)}\n💰 Buyback: Rp ${buyback} | Selisih harga : ${formatSelisih(selisihBuyback)}`;
+        
+        const jualSelisih = formatSelisih(selisihJual);
+        const buybackSelisih = formatSelisih(selisihBuyback);
+        
+        return `🧈 *${source.toUpperCase()}* 🧈\n` +
+          `💰 Jual: Rp ${jual}${jualSelisih ? ` | Selisih harga: ${jualSelisih}` : ''}\n` +
+          `💰 Buyback: Rp ${buyback}${buybackSelisih ? ` | Selisih harga: ${buybackSelisih}` : ''}`;        
       })
       .join('\n\n');
 
