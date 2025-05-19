@@ -10,7 +10,7 @@ module.exports = async function scrapeHargaEmas() {
   const buyback = $('.price-current').eq(2).text().trim();
 
   return {
-    source: 'hargaemas',
+    source: 'hargaemas.com',
     jual,
     buyback
   };

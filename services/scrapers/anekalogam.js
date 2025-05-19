@@ -13,7 +13,7 @@ module.exports = async function scrapeAnekaLogam() {
   const buyback = $('span.tprice').eq(1).text().trim();
 
   return {
-    source: 'anekalogam',
+    source: 'anekalogam.co.id',
     jual: cleanHarga(jual),
     buyback: cleanHarga(buyback),
   };

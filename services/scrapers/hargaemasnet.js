@@ -16,7 +16,7 @@ module.exports = async function scrapeHargaEmas() {
     .find('td').eq(1).text().match(/\d[\d\.]+/)[0];
 
   return {
-    source: 'hargaemasnet',
+    source: 'harga-emas.net',
     jual,
     buyback
   };
