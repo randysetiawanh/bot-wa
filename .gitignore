@@ -9,3 +9,6 @@ logs/*
 logs/bot-combined.log
 cache/goldPrice.json
 bot-wa.zip
+.env
+package-lock.json
+package-lock2.json
