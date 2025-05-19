@@ -21,5 +21,6 @@ jobs:
             git reset --hard
             git pull origin main
             npm install
-            pm2 restart bot-wa || pm2 start index.js --name bot-wa
+            pm2 delete bot-wa
+            pm2 start index.js --name bot-wa
 
