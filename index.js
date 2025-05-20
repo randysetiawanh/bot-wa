@@ -2,8 +2,9 @@ require('dotenv').config();
 global.crypto = require('crypto');
 const logger = require('./utils/logger');
 const startAbsenScheduler = require('./services/absenScheduler');
-const startEmasWatcher = require('./services/emasWatcher');
+const startGoldWatcher = require('./services/goldWatcher');
 
 logger.info('🚀 Bot WA starting...');
-startEmasWatcher();
+console.log('🚀 Bot WA starting...');
+startGoldWatcher();
 startAbsenScheduler();

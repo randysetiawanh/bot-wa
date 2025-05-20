@@ -12,7 +12,7 @@ async function connectWhatsApp() {
       process.env.DEVICE_BROWSER,
       process.env.DEVICE_VERSION
     ],
-    printQRInTerminal: true,
+    // printQRInTerminal: true,a
   });
 
   sock.ev.on('creds.update', saveCreds);
