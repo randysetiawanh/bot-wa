@@ -31,7 +31,8 @@ function formatSelisih(curr, prev) {
 }
 
 function buildMessage(data, cache, isScheduledTime) {
-  const header = isScheduledTime ? '~~~ UPDATE HARGA SIANG ~~~\n' : '';
+  const header = process.env.NODE_ENV == 'production' ? '--- DIKIRIM DARI SERVER ---' : '--- DIKIRIM DARI LOKAL ---';
+  const subheader = isScheduledTime ? '~~~ UPDATE HARGA SIANG ~~~\n' : '';
   const lines = Object.entries(data).map(([source, { jual, buyback }]) => {
     const cached = cache[source] || {};
     const jualNow = parseRupiah(jual);
@@ -44,7 +45,7 @@ function buildMessage(data, cache, isScheduledTime) {
       `💰 Buyback: Rp ${buyback}${formatSelisih(buybackNow, buybackPrev)}`;
   });
 
-  return header + lines.join('\n\n');
+  return header + subheader + lines.join('\n\n');
 }
 
 async function checkHargaEmas() {
