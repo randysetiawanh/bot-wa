@@ -31,7 +31,7 @@ function formatSelisih(curr, prev) {
 }
 
 function buildMessage(data, cache, isScheduledTime) {
-  const header = process.env.NODE_ENV == 'production' ? '--- DIKIRIM DARI SERVER ---' : '--- DIKIRIM DARI LOKAL ---';
+  const header = process.env.NODE_ENV == 'production' ? '--- DIKIRIM DARI SERVER ---\n' : '--- DIKIRIM DARI LOKAL ---\n';
   const subheader = isScheduledTime ? '~~~ UPDATE HARGA SIANG ~~~\n' : '';
   const lines = Object.entries(data).map(([source, { jual, buyback }]) => {
     const cached = cache[source] || {};
