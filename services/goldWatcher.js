@@ -3,32 +3,23 @@ const path = require('path');
 const logger = require('../utils/logger');
 const config = require('../config');
 const waSendMessage = require('./whatsappSendMessage');
-const scrapers = [
+const frequentScrapers = [
   require('./scrapers/hargaemas'),
   require('./scrapers/anekalogam'),
   require('./scrapers/hargaemasnet'),
-  require('./scrapers/tokopedia')
+  require('./scrapers/tokopedia'),
 ];
 
+const delayedScrapers = [
+  require('./scrapers/logammulia'),
+];
+
+const { readCache, writeCache, readTimeCache, 
+  writeTimeCache, parseRupiah, formatSelisih 
+} = require('../helpers/goldHelper');
+
 const CACHE_FILE = path.join(__dirname, '../cache/goldPrice.json');
-
-function readCache() {
-  return fs.existsSync(CACHE_FILE)
-    ? JSON.parse(fs.readFileSync(CACHE_FILE, 'utf-8'))
-    : {};
-}
-
-function parseRupiah(str) {
-  return parseInt(str.replace(/\./g, ''), 10);
-}
-
-function formatSelisih(curr, prev) {
-  if (prev === null) return '';
-  const diff = curr - prev;
-  if (diff === 0) return '';
-  const sign = diff > 0 ? '+' : '-';
-  return ` | Selisih harga: ${sign} Rp ${Math.abs(diff).toLocaleString('id-ID')}`;
-}
+const TIME_CACHE_FILE = path.join(__dirname, '../cache/goldScrapeTime.json');
 
 function buildMessage(data, cache, isScheduledTime) {
   const header = process.env.NODE_ENV == 'production' ? '--- DIKIRIM DARI SERVER ---\n' : '--- DIKIRIM DARI LOKAL ---\n';
@@ -53,10 +44,37 @@ async function checkHargaEmas() {
   const newData = {};
   let hasChanged = false;
 
-  for (const scraper of scrapers) {
+  for (const scraper of frequentScrapers) {
     try {
       const { source, jual, buyback } = await scraper();
       newData[source] = { jual, buyback };
+
+      if (
+        !cachedData[source] ||
+        cachedData[source].jual !== jual ||
+        cachedData[source].buyback !== buyback
+      ) {
+        hasChanged = true;
+      }
+    } catch (err) {
+      logger.error(`Error scraping ${scraper.name}:`, err);
+    }
+  }
+
+  for (const scraper of delayedScrapers) {
+    const sourceName = scraper.name || 'logammulia';
+    const lastScrapeTime = readTimeCache(sourceName);
+    const now = Date.now();
+
+    // 3 jam = 3 * 60 * 60 * 1000 = 10800000 ms
+    const isDue = !lastScrapeTime || now - lastScrapeTime > process.env.DELAYED_TIMEOUT;
+
+    if (!isDue) continue;
+
+    try {
+      const { source, jual, buyback } = await scraper();
+      newData[source] = { jual, buyback };
+      writeTimeCache(sourceName, now);
 
       if (
         !cachedData[source] ||
@@ -79,7 +97,7 @@ async function checkHargaEmas() {
     await waSendMessage(message, 'Update Harga Emas');
 
     if (hasChanged) {
-      fs.writeFileSync(CACHE_FILE, JSON.stringify(newData, null, 2));
+      writeCache(newData);
       logger.info('Harga emas berubah, pesan dikirim');
     } else {
       logger.info('Harga tetap, tapi pesan dikirim karena jam 12 siang');
