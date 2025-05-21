@@ -8,6 +8,7 @@ auth2
 logs/*
 logs/bot-combined.log
 cache/goldPrice.json
+cache/goldScrapeTime.json
 bot-wa.zip
 .env
 package-lock.json
