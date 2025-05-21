@@ -6,7 +6,8 @@ const waSendMessage = require('./whatsappSendMessage');
 const scrapers = [
   require('./scrapers/hargaemas'),
   require('./scrapers/anekalogam'),
-  require('./scrapers/hargaemasnet')
+  require('./scrapers/hargaemasnet'),
+  require('./scrapers/tokopedia')
 ];
 
 const CACHE_FILE = path.join(__dirname, '../cache/goldPrice.json');
@@ -89,6 +90,7 @@ async function checkHargaEmas() {
 
 module.exports = function startGoldWatcher() {
   logger.info('📡 Memulai watcher harga emas...');
+  console.log('📡 Memulai watcher harga emas...');
   checkHargaEmas();
   setInterval(checkHargaEmas, config.goldInterval);
 };
