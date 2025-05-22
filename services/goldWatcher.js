@@ -44,10 +44,19 @@ async function checkHargaEmas() {
   const newData = {};
   let hasChanged = false;
 
-  for (const scraper of frequentScrapers) {
+  for (const scraper of delayedScrapers) {
+    const sourceName = scraper.name || 'logammulia';
+    const timeCache = readTimeCache();
+    const lastScrapeTime = timeCache[sourceName]?.timestamp || null;
+    const now = Date.now();
+    const isDue = !lastScrapeTime || now - lastScrapeTime > process.env.DELAYED_TIMEOUT;
+
+    if (!isDue) continue;
+
     try {
       const { source, jual, buyback } = await scraper();
       newData[source] = { jual, buyback };
+      writeTimeCache(sourceName, now);
 
       if (
         !cachedData[source] ||
@@ -61,20 +70,10 @@ async function checkHargaEmas() {
     }
   }
 
-  for (const scraper of delayedScrapers) {
-    const sourceName = scraper.name || 'logammulia';
-    const lastScrapeTime = readTimeCache(sourceName);
-    const now = Date.now();
-
-    // 3 jam = 3 * 60 * 60 * 1000 = 10800000 ms
-    const isDue = !lastScrapeTime || now - lastScrapeTime > process.env.DELAYED_TIMEOUT;
-
-    if (!isDue) continue;
-
+  for (const scraper of frequentScrapers) {
     try {
       const { source, jual, buyback } = await scraper();
       newData[source] = { jual, buyback };
-      writeTimeCache(sourceName, now);
 
       if (
         !cachedData[source] ||

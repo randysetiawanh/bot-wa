@@ -1,7 +1,8 @@
 const puppeteer = require('puppeteer');
+const logger = require('../../utils/logger');
 
 module.exports = async function scrapeLogamMulia() {
-  console.log('dijalanin');
+  logger.info('logammulia dijalanin');
   const browser = await puppeteer.launch({
     headless: 'new',
     args: ['--no-sandbox', '--disable-setuid-sandbox']
