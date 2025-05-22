@@ -51,7 +51,12 @@ async function checkHargaEmas() {
     const now = Date.now();
     const isDue = !lastScrapeTime || now - lastScrapeTime > process.env.DELAYED_TIMEOUT;
 
-    if (!isDue) continue;
+    if (!isDue) {
+      if (cachedData[sourceName]) {
+        newData[sourceName] = cachedData[sourceName];
+      }
+      continue;
+    }
 
     try {
       const { source, jual, buyback } = await scraper();
