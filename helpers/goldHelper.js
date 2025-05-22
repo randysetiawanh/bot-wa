@@ -4,7 +4,6 @@ const path = require('path');
 const CACHE_FILE = path.join(__dirname, '../cache/goldPrice.json');
 const TIME_CACHE_FILE = path.join(__dirname, '../cache/goldScrapeTime.json');
 
-// Format WIB
 function formatWIB(ms) {
   return new Date(ms).toLocaleString('id-ID', {
     timeZone: 'Asia/Jakarta',
@@ -19,7 +18,11 @@ function readCache() {
 }
 
 function writeCache(data) {
-  fs.writeFileSync(CACHE_FILE, JSON.stringify(data, null, 2));
+  try {
+    fs.writeFileSync(CACHE_FILE, JSON.stringify(data, null, 2));
+  } catch (err) {
+    console.error('[ERROR] Gagal menyimpan cache harga emas:', err.message);
+  }
 }
 
 function readTimeCache() {
@@ -38,6 +41,7 @@ function writeTimeCache(source, timestamp) {
 }
 
 function parseRupiah(str) {
+  if (!str || typeof str !== 'string') return 0;
   return parseInt(str.replace(/\./g, '').replace('Rp', '').replace('/gr', '').trim(), 10);
 }
 

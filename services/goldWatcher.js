@@ -49,8 +49,9 @@ async function checkHargaEmas() {
     const timeCache = readTimeCache();
     const lastScrapeTime = timeCache[sourceName]?.timestamp || null;
     const now = Date.now();
-    const isDue = !lastScrapeTime || now - lastScrapeTime > process.env.DELAYED_TIMEOUT;
-
+    const DELAYED_TIMEOUT = parseInt(process.env.DELAYED_TIMEOUT || '3600000', 10);
+    const isDue = !lastScrapeTime || now - lastScrapeTime > DELAYED_TIMEOUT;
+    
     if (!isDue) {
       if (cachedData[sourceName]) {
         newData[sourceName] = cachedData[sourceName];
