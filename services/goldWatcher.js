@@ -60,6 +60,14 @@ async function checkHargaEmas() {
 
     try {
       const { source, jual, buyback } = await scraper();
+      if (jual === '-1' || buyback === '-1') {
+        logger.warn(`⚠️ Scrap ${source} gagal atau diblok, pakai data cache`);
+        if (cachedData[source]) {
+          newData[source] = cachedData[source];
+        }
+        continue;
+      }
+        
       newData[source] = { jual, buyback };
       writeTimeCache(sourceName, now);
 
