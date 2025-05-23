@@ -21,37 +21,19 @@ const { readCache, writeCache, readTimeCache,
 const CACHE_FILE = path.join(__dirname, '../cache/goldPrice.json');
 const TIME_CACHE_FILE = path.join(__dirname, '../cache/goldScrapeTime.json');
 
-function buildMessage(data, cache, isScheduledTime) {
-  const header = process.env.NODE_ENV == 'production' ? '--- DIKIRIM DARI SERVER ---\n' : '--- DIKIRIM DARI LOKAL ---\n';
-  const subheader = isScheduledTime ? '~~~ UPDATE HARGA SIANG ~~~\n' : '';
-  const lines = Object.entries(data).map(([source, { jual, buyback }]) => {
-    const cached = cache[source] || {};
-    const jualNow = parseRupiah(jual);
-    const buybackNow = parseRupiah(buyback);
-    const jualPrev = cached.jual ? parseRupiah(cached.jual) : null;
-    const buybackPrev = cached.buyback ? parseRupiah(cached.buyback) : null;
-
-    return `🧈 *${source.toUpperCase()}* 🧈\n` +
-      `💰 Jual: Rp ${jual}${formatSelisih(jualNow, jualPrev)}\n` +
-      `💰 Buyback: Rp ${buyback}${formatSelisih(buybackNow, buybackPrev)}`;
-  });
-
-  return header + subheader + lines.join('\n\n');
-}
-
 async function checkHargaEmas() {
   const cachedData = readCache();
   const newData = {};
   let hasChanged = false;
 
   for (const scraper of delayedScrapers) {
-    const sourceName = scraper.name || 'logammulia';
+    const { source: sourceName } = await scraper(true);
+    console.log('source : ', sourceName)
     const timeCache = readTimeCache();
     const lastScrapeTime = timeCache[sourceName]?.timestamp || null;
     const now = Date.now();
     const DELAYED_TIMEOUT = parseInt(process.env.DELAYED_TIMEOUT || '3600000', 10);
     const isDue = !lastScrapeTime || now - lastScrapeTime > DELAYED_TIMEOUT;
-    
     if (!isDue) {
       if (cachedData[sourceName]) {
         newData[sourceName] = cachedData[sourceName];
@@ -118,6 +100,24 @@ async function checkHargaEmas() {
   } else if (now.getMinutes() === 0) {
     logger.info('Harga emas tidak berubah');
   }
+}
+
+function buildMessage(data, cache, isScheduledTime) {
+  const header = process.env.NODE_ENV == 'production' ? '--- DIKIRIM DARI SERVER ---\n' : '--- DIKIRIM DARI LOKAL ---\n';
+  const subheader = isScheduledTime ? '~~~ UPDATE HARGA SIANG ~~~\n' : '';
+  const lines = Object.entries(data).map(([source, { jual, buyback }]) => {
+    const cached = cache[source] || {};
+    const jualNow = parseRupiah(jual);
+    const buybackNow = parseRupiah(buyback);
+    const jualPrev = cached.jual ? parseRupiah(cached.jual) : null;
+    const buybackPrev = cached.buyback ? parseRupiah(cached.buyback) : null;
+
+    return `🧈 *${source.toUpperCase()}* 🧈\n` +
+      `💰 Jual: Rp ${jual}${formatSelisih(jualNow, jualPrev)}\n` +
+      `💰 Buyback: Rp ${buyback}${formatSelisih(buybackNow, buybackPrev)}`;
+  });
+
+  return header + subheader + lines.join('\n\n');
 }
 
 module.exports = function startGoldWatcher() {
