@@ -2,8 +2,6 @@ const puppeteer = require('puppeteer');
 const logger = require('../../utils/logger');
 
 module.exports = async function scrapeLogamMulia(getSourceOnly = false) {
-  logger.info('logammulia dijalanin');
-
   if(getSourceOnly) {
     return { source: 'logammulia.com' };
   }
