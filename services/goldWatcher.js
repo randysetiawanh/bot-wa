@@ -26,12 +26,7 @@ const TIME_CACHE_FILE = path.join(__dirname, '../cache/goldScrapeTime.json');
 async function checkHargaEmas() {
   const date = new Date();
   const schedule = goldScheduleList.find(s => cronMatch(s.time, date));
-  if (!schedule) {
-    logger.info(`⏰ Waktu gacocok: "${schedule}"`);
-    return;
-  }
-
-  logger.info(`⏰ Waktu cocok: "${schedule.message}" (${schedule.time})`);
+  if (!schedule) return;
 
   const cachedData = readCache();
   const newData = {};
