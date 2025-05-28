@@ -1,8 +1,10 @@
 const fs = require('fs');
 const path = require('path');
-const logger = require('../utils/logger');
 const config = require('../config');
+const logger = require('../utils/logger');
+const { cronMatch } = require('../utils/cronMatcher');
 const waSendMessage = require('./whatsappSendMessage');
+const { goldScheduleList } = require('../data/goldScheduleList');
 const frequentScrapers = [
   require('./scrapers/hargaemas'),
   require('./scrapers/anekalogam'),
@@ -22,6 +24,15 @@ const CACHE_FILE = path.join(__dirname, '../cache/goldPrice.json');
 const TIME_CACHE_FILE = path.join(__dirname, '../cache/goldScrapeTime.json');
 
 async function checkHargaEmas() {
+  const date = new Date();
+  const schedule = goldScheduleList.find(s => cronMatch(s.time, date));
+  if (!schedule) {
+    logger.info(`⏰ Waktu gacocok: "${schedule}"`);
+    return;
+  }
+
+  logger.info(`⏰ Waktu cocok: "${schedule.message}" (${schedule.time})`);
+
   const cachedData = readCache();
   const newData = {};
   let hasChanged = false;
