@@ -9,11 +9,11 @@ const frequentScrapers = [
   require('./scrapers/hargaemas'),
   require('./scrapers/anekalogam'),
   require('./scrapers/hargaemasnet'),
-  require('./scrapers/tokopedia'),
 ];
 
 const delayedScrapers = [
   require('./scrapers/logammulia'),
+  require('./scrapers/tokopedia'),
 ];
 
 const { readCache, writeCache, readTimeCache, 
@@ -34,7 +34,7 @@ async function checkHargaEmas() {
 
   for (const scraper of delayedScrapers) {
     const { source: sourceName } = await scraper(true);
-    console.log('source : ', sourceName)
+
     const timeCache = readTimeCache();
     const lastScrapeTime = timeCache[sourceName]?.timestamp || null;
     const now = Date.now();
