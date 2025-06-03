@@ -3,17 +3,20 @@ require('winston-daily-rotate-file');
 const fs = require('fs');
 const path = require('path');
 
-// Buat format log
+// Format log
 const logFormat = format.printf(({ level, message, timestamp }) => {
   return `[${timestamp}] [${level.toUpperCase()}] ${message}`;
 });
 
 // Ambil bulan sekarang (MM)
 const now = new Date();
-const currentMonth = String(now.getMonth() + 1).padStart(2, '0'); // '06'
+const currentMonth = String(now.getMonth() + 1).padStart(2, '0'); // contoh: '06'
 
-// Buat folder logs/MM jika belum ada
-const logDir = path.join(__dirname, 'logs', currentMonth);
+// Tentukan folder logs/MM di root project
+const rootDir = process.cwd(); // lokasi root project
+const logDir = path.join(rootDir, 'logs', currentMonth);
+
+// Buat folder jika belum ada
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
 }
@@ -27,14 +30,12 @@ const logger = createLogger({
   ),
   transports: [
     new transports.File({
-      filename: path.join('logs', 'bot-error.log'),
+      filename: path.join(rootDir, 'logs', 'bot-error.log'),
       level: 'error'
     }),
     new transports.File({
-      filename: path.join('logs', 'bot-combined.log')
+      filename: path.join(rootDir, 'logs', 'bot-combined.log')
     }),
-
-    // File log harian di folder bulan
     new transports.DailyRotateFile({
       filename: path.join(logDir, 'bot-%DATE%.log'),
       datePattern: 'YYYY-MM-DD',
