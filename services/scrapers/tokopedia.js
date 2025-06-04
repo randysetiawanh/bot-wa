@@ -27,11 +27,11 @@ module.exports = async function scrapeTokopediaEmas() {
         .filter(t => t.includes('Rp'));
       
       const clean = text => text.replace(/Rp|\s|\/gr/g, '');
-
+      console.log(prices);
       return {
         source: 'tokopedia.com',
         jual: clean(prices[0] || ''),
-        buyback: clean(prices[0] || ''),
+        buyback: clean(prices[1] || ''),
       };
     });
 
