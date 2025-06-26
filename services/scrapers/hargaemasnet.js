@@ -1,7 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-module.exports = async function scrapeHargaEmas() {
+module.exports = async function scrapeHargaEmasNet() {
   const url = 'https://harga-emas.net/';
   const { data } = await axios.get(url);
   const $ = cheerio.load(data);

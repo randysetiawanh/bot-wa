@@ -6,14 +6,14 @@ const { cronMatch } = require('../utils/cronMatcher');
 const waSendMessage = require('./whatsappSendMessage');
 const { goldScheduleList } = require('../data/goldScheduleList');
 const frequentScrapers = [
-  require('./scrapers/hargaemas'),
   require('./scrapers/anekalogam'),
   require('./scrapers/hargaemasnet'),
 ];
 
 const delayedScrapers = [
   require('./scrapers/logammulia'),
-  require('./scrapers/tokopedia'),
+  require('./scrapers/hargaemas'),
+  // require('./scrapers/tokopedia'),
 ];
 
 const { readCache, writeCache, readTimeCache, 
