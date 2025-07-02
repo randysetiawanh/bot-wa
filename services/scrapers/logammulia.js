@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const logger = require('../../utils/logger');
+const dumpHTML = require('../../utils/htmlDumper');
 
 module.exports = async function scrapeLogamMulia(getSourceOnly = false) {
   if(getSourceOnly) {
@@ -58,8 +59,12 @@ module.exports = async function scrapeLogamMulia(getSourceOnly = false) {
       buyback: clean(buyback || '')
     };
   } catch (error) {
+    const html = await page.content();
+    const html2 = await page2.content();
+    dumpHTML('logammulia', html, true);
+    dumpHTML('logammulia', html2, false);
     await browser.close();
-    console.error("❌ Error scraping logammulia:", error.message);
+    logger.error("❌ Error scraping logammulia:", error.message);
     return {
       source: 'logammulia.com',
       jual: '-1',

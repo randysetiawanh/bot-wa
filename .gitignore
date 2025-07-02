@@ -13,3 +13,4 @@ bot-wa.zip
 .env
 package-lock.json
 package-lock2.json
+logs/debug/*
