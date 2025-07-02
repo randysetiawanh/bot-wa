@@ -23,26 +23,27 @@ module.exports = async function scrapeLogamMulia(getSourceOnly = false) {
   );
 
   try {
-    await page.goto('https://www.logammulia.com/id/harga-emas-hari-ini', {
+    // Get sell price
+    await page.goto('https://www.logammulia.com/id', {
       waitUntil: 'domcontentloaded',
       timeout: 30000
     });
-
-    await page.waitForSelector('table');
-
+    await page.waitForSelector('section.index-hero span.current'); 
     const jual = await page.evaluate(() => {
-      return document.querySelector(
-        "body > section.section-padding.n-no-padding-top > div > div:nth-child(3) > div > div.grid-child.n-768-1per3.n-768-no-margin-bottom > table:nth-child(4) > tbody > tr:nth-child(4) > td:nth-child(2)"
-      )?.innerText.trim() || '-';
+      const text = document.querySelector(
+        "body > section.index-hero > div.hero-price > div.child.child-2.has-bg.has-overlay.overlay-gold > div > p.price > span.current"
+      )?.innerText || '';
+    
+      const match = text.match(/Rp(\d{1,3}(?:\.\d{3})+)/);
+      return match ? match[1] : '-';
     });
 
+    // Get buyback price
     await page2.goto('https://www.logammulia.com/id/sell/gold', {
       waitUntil: 'domcontentloaded',
       timeout: 30000
     });
-
     await page2.waitForSelector('span.value > span.text');
-
     const buyback = await page2.evaluate(() => {
       return document.querySelector(
         'body > section.section-padding.n-no-padding-bottom > div > div > div.grid-child.n-1200-2per3.n-no-margin-bottom > div > div > div.right > div > div:nth-child(1) > span.value > span.text'
@@ -55,8 +56,8 @@ module.exports = async function scrapeLogamMulia(getSourceOnly = false) {
 
     return {
       source: 'logammulia.com',
-      jual: clean(jual || ''),
-      buyback: clean(buyback || '')
+      jual: jual || '-1',
+      buyback: clean(buyback || '-1')
     };
   } catch (error) {
     const html = await page.content();
